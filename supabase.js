@@ -1,7 +1,11 @@
-import { createClient } from '@supabase/supabase-js';
+create policy "authenticated users can create centers"
+on public.centers
+for insert
+to authenticated
+with check (true);
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-export const isCloudConfigured = Boolean(supabaseUrl && supabaseAnonKey);
-export const supabase = isCloudConfigured ? createClient(supabaseUrl, supabaseAnonKey) : null;
+create policy "users can create their own membership"
+on public.center_members
+for insert
+to authenticated
+with check (user_id = auth.uid());
